@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "pipka"
+rootProject.name = "Flavor"
 include(":app")

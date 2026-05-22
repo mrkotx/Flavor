@@ -3,11 +3,37 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="active_button">#1e3a8a</color>
-    <color name="inactive_button">#693502</color>
+        <!-- Main -->
+        <color name="background">#B7BC9A</color>
+        <color name="surface">#EDE7DC</color>
+        <color name="surface_soft">#D8D1C4</color>
 
-    <color name="logo_color">#FC8803</color>
-    <color name="line_color">#8a8a8a</color>
-    <color name="buttons_color">#693502</color>
+        <!-- Buttons -->
+        <color name="active_button">#D0AF87</color>
+        <color name="inactive_button">#866A40</color>
+        <color name="button_pressed">#6E5430</color>
+        <color name="button_disabled">#B8A891</color>
+
+        <!-- Text -->
+        <color name="text_primary">#4A3823</color>
+        <color name="text_secondary">#74644D</color>
+        <color name="text_muted">#9A8B77</color>
+        <color name="text_on_primary">#F8F4EC</color>
+
+        <!-- Status -->
+        <color name="success">#788B5A</color>
+        <color name="warning">#C19663</color>
+        <color name="error">#A66B5B</color>
+        <color name="info">#7B8A7B</color>
+
+        <!-- Border -->
+        <color name="border_light">#D8D0C2</color>
+        <color name="border_medium">#B39D7B</color>
+        <color name="divider">#CFC7B8</color>
+
+        <!-- Navigation -->
+        <color name="bottom_nav_background">#ECE7DF</color>
+        <color name="icon_active">#FFFFFF</color>
+        <color name="icon_inactive">#8A775C</color>
 
 </resources>

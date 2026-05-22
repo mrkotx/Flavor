@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.pipka"
+    namespace = "com.example.Flavor"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -11,7 +11,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.pipka"
+        applicationId = "com.example.Flavor"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
