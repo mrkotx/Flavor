@@ -1,0 +1,36 @@
+<resources>
+
+    <!-- Main -->
+    <color name="background">#2D3225</color>
+    <color name="surface">#3A3E31</color>
+    <color name="surface_soft">#45493C</color>
+
+    <!-- Buttons -->
+    <color name="active_button">#C5A37B</color>
+    <color name="inactive_button">#A8895D</color>
+    <color name="button_pressed">#8E714B</color>
+    <color name="button_disabled">#6A6358</color>
+
+    <!-- Text -->
+    <color name="text_primary">#EEE8DE</color>
+    <color name="text_secondary">#C8BDAE</color>
+    <color name="text_muted">#9F968A</color>
+    <color name="text_on_primary">#2D2418</color>
+
+    <!-- Status -->
+    <color name="success">#90A56B</color>
+    <color name="warning">#D0A16D</color>
+    <color name="error">#C98777</color>
+    <color name="info">#8A9984</color>
+
+    <!-- Border -->
+    <color name="border_light">#575B4C</color>
+    <color name="border_medium">#7C705D</color>
+    <color name="divider">#626659</color>
+
+    <!-- Navigation -->
+    <color name="bottom_nav_background">#3A3E31</color>
+    <color name="icon_active">#F8F4EC</color>
+    <color name="icon_inactive">#9F8C70</color>
+
+</resources>
