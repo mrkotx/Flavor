@@ -1,19 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_element"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="25dp"
-        android:text="Профиль"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:textColor="@color/active_button"/>
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="0dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="32dp"
+        app:cardElevation="4dp">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/tvProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="Профиль"
+                android:textColor="@color/active_button"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/profile_image"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="20dp"
+                android:contentDescription="Аватар профиля"
+                app:icon="@drawable/profile_icon"
+                app:iconPadding="0dp"
+                app:iconSize="70dp"
+                app:iconGravity="textStart"
+                app:cornerRadius="45dp"
+                app:backgroundTint="@color/success"
+                android:backgroundTint="@color/success"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvProfile" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/login_button"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:text="Войти"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:backgroundTint="@color/inactive_button"
+                app:cornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/profile_image"
+                app:layout_constraintBottom_toBottomOf="@id/profile_image"
+                android:layout_marginTop="50dp"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/register_button"
+                android:layout_width="150dp"
+                android:layout_height="48dp"
+                android:text="Регистрация"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:backgroundTint="@color/inactive_button"
+                app:cornerRadius="10dp"
+                android:layout_marginRight="10dp"
+                app:layout_constraintEnd_toStartOf="@id/login_button"
+                app:layout_constraintTop_toTopOf="@id/profile_image"
+                app:layout_constraintBottom_toBottomOf="@id/profile_image"
+                android:layout_marginTop="50dp"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</RelativeLayout>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "126906265010",
+    "project_id": "flavor-e6865",
+    "storage_bucket": "flavor-e6865.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126906265010:android:4209ac46c63720862488ab",
+        "android_client_info": {
+          "package_name": "com.example.Flavor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAofQpbcaWKCmQJ7bnl8CDnT1zyGdrWODg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

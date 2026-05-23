@@ -3,6 +3,8 @@ package com.example.Flavor;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 import android.view.View;
+import com.google.android.material.button.MaterialButton;
+
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,9 +12,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
+    // Быстрый доступ
     private MaterialButton home_button;
     private MaterialButton search_button;
     private MaterialButton add_button;
@@ -71,7 +76,8 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        }
+    }
+
     private void showHomeFragment() {
         HomeFragment fragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction()
