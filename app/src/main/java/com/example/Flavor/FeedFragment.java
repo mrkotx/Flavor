@@ -24,142 +24,159 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SavedFragment extends Fragment {
+public class FeedFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private RecipeAdapter adapter;
     private ProgressBar progressBar;
     private TextView emptyText;
-    private List<Recipe> savedRecipeList = new ArrayList<>();
+    private List<Recipe> recipeList = new ArrayList<>();
 
+    // Firebase
     private FirebaseAuth auth;
     private DatabaseReference recipesRef;
     private DatabaseReference savedRef;
     private FirebaseUser currentUser;
 
-    // Храним ID сохранённых рецептов для быстрого доступа
-    private List<String> savedRecipeIds = new ArrayList<>();
+    // Слушатель для обновления SavedFragment
+    private OnRecipeUnsavedListener unsavedListener;
+
+    public interface OnRecipeUnsavedListener {
+        void onRecipeUnsaved(String recipeId);
+    }
+
+    public void setOnRecipeUnsavedListener(OnRecipeUnsavedListener listener) {
+        this.unsavedListener = listener;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_saved, container, false);
+        View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
-        recyclerView = view.findViewById(R.id.savedRecyclerView);
+        recyclerView = view.findViewById(R.id.feedRecyclerView);
         progressBar = view.findViewById(R.id.progressBar);
         emptyText = view.findViewById(R.id.emptyText);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Firebase
+        // Инициализация Firebase
         auth = FirebaseAuth.getInstance();
         currentUser = auth.getCurrentUser();
         recipesRef = FirebaseDatabase.getInstance().getReference("Recipes");
         savedRef = FirebaseDatabase.getInstance().getReference("SavedRecipes");
 
-        adapter = new RecipeAdapter(savedRecipeList,
+        // Настройка адаптера
+        adapter = new RecipeAdapter(recipeList,
                 recipe -> openRecipeDetail(recipe),
                 (recipe, position, isLiked) -> {
-                    // Если убрали лайк в SavedFragment - удаляем
-                    if (!isLiked) {
-                        removeFromSaved(recipe, position);
+                    if (currentUser == null) {
+                        Toast.makeText(getContext(), "Войдите в аккаунт, чтобы сохранять рецепты", Toast.LENGTH_SHORT).show();
+                        adapter.updateLikeStatus(position, false);
+                        return;
+                    }
+
+                    if (isLiked) {
+                        saveToSavedRecipes(recipe, position);
+                    } else {
+                        removeFromSavedRecipes(recipe, position);
                     }
                 }
         );
 
         recyclerView.setAdapter(adapter);
 
-        if (currentUser != null) {
-            // Слушаем изменения в SavedRecipes в реальном времени
-            listenToSavedChanges();
-        } else {
-            showEmpty(true);
-            emptyText.setText("Войдите в аккаунт,\nчтобы увидеть сохранённые рецепты");
-        }
+        loadRecipes();
 
         return view;
     }
 
-    private void listenToSavedChanges() {
-        String userId = currentUser.getUid();
-
-        // Слушаем изменения в списке сохранённых рецептов
-        savedRef.child(userId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                savedRecipeIds.clear();
-
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    savedRecipeIds.add(dataSnapshot.getKey());
-                }
-
-                // Загружаем актуальные рецепты
-                loadSavedRecipes();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Ошибка: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void loadSavedRecipes() {
+    public void loadRecipes() {
         showLoading(true);
 
-        if (savedRecipeIds.isEmpty()) {
-            savedRecipeList.clear();
-            adapter.updateRecipes(savedRecipeList);
-            showLoading(false);
-            showEmpty(true);
-            return;
-        }
-
-        recipesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        recipesRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                savedRecipeList.clear();
+                recipeList.clear();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    String recipeId = dataSnapshot.getKey();
-
-                    if (savedRecipeIds.contains(recipeId)) {
-                        Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                        if (map != null) {
-                            Recipe recipe = new Recipe(map);
-                            recipe.setId(recipeId);
-                            recipe.setSaved(true);
-                            savedRecipeList.add(0, recipe);
-                        }
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    if (map != null) {
+                        Recipe recipe = new Recipe(map);
+                        recipe.setId(dataSnapshot.getKey());
+                        recipeList.add(0, recipe);
                     }
                 }
 
-                adapter.updateRecipes(savedRecipeList);
-                showLoading(false);
-                showEmpty(savedRecipeList.isEmpty());
+                // Проверяем статус сохранения для каждого рецепта
+                checkSavedStatus();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 showLoading(false);
-                Toast.makeText(getContext(), "Ошибка загрузки рецептов", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Ошибка загрузки: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void removeFromSaved(Recipe recipe, int position) {
-        if (currentUser == null) return;
+    private void checkSavedStatus() {
+        if (currentUser == null) {
+            adapter.updateRecipes(recipeList);
+            showLoading(false);
+            checkEmpty();
+            return;
+        }
 
+        String userId = currentUser.getUid();
+
+        savedRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (Recipe recipe : recipeList) {
+                    recipe.setSaved(snapshot.hasChild(recipe.getId()));
+                }
+                adapter.updateRecipes(recipeList);
+                showLoading(false);
+                checkEmpty();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                adapter.updateRecipes(recipeList);
+                showLoading(false);
+                checkEmpty();
+            }
+        });
+    }
+
+    private void saveToSavedRecipes(Recipe recipe, int position) {
+        String userId = currentUser.getUid();
+
+        savedRef.child(userId).child(recipe.getId()).setValue(true)
+                .addOnSuccessListener(aVoid -> {
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Ошибка", Toast.LENGTH_SHORT).show();
+                    adapter.updateLikeStatus(position, false);
+                });
+    }
+
+    private void removeFromSavedRecipes(Recipe recipe, int position) {
         String userId = currentUser.getUid();
 
         savedRef.child(userId).child(recipe.getId()).removeValue()
                 .addOnSuccessListener(aVoid -> {
-                    // Рецепт автоматически удалится из списка через слушатель
 
+
+                    // Уведомляем SavedFragment об удалении
+                    if (unsavedListener != null) {
+                        unsavedListener.onRecipeUnsaved(recipe.getId());
+                    }
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Ошибка удаления", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Ошибка", Toast.LENGTH_SHORT).show();
                     adapter.updateLikeStatus(position, true);
                 });
     }
@@ -181,5 +198,9 @@ public class SavedFragment extends Fragment {
         if (emptyText != null) {
             emptyText.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
         }
+    }
+
+    private void checkEmpty() {
+        showEmpty(recipeList.isEmpty());
     }
 }

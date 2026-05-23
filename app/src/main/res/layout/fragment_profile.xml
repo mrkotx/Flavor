@@ -1,84 +1,252 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root_element"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background">
 
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
+        android:id="@+id/root_element"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_margin="0dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="32dp"
-        app:cardElevation="4dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <!-- Аватар и информация - когда пользователь авторизован -->
+        <LinearLayout
+            android:id="@+id/profile_info_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="16dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:visibility="gone">
 
-            <TextView
-                android:id="@+id/tvProfile"
-                android:layout_width="wrap_content"
+            <!-- Карточка профиля -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:text="Профиль"
-                android:textColor="@color/active_button"
-                android:textSize="30sp"
+                android:layout_marginTop="8dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:padding="24dp">
+
+                    <ImageView
+                        android:id="@+id/profile_image"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/profile_icon"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:id="@+id/user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text=""
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/active_button" />
+
+                    <TextView
+                        android:id="@+id/user_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text=""
+                        android:textSize="14sp"
+                        android:textColor="@color/text_muted" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Карточка статистики -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:id="@+id/stats_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:padding="20dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/recipes_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1"
+                            android:textSize="28sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/active_button" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Рецептов"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_muted" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="40dp"
+                        android:background="@color/border_medium" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/likes_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="28sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/active_button" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Лайков"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_muted" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Кнопка выхода -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/logout_button"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="12dp"
+                android:text="Выйти"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/warning"
+                app:cornerRadius="16dp" />
+
+            <!-- Заголовок "Мои рецепты" — показывается только вместе с RecyclerView через код -->
+            <TextView
+                android:id="@+id/my_recipes_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:layout_marginBottom="4dp"
+                android:paddingStart="4dp"
+                android:text="Мои рецепты"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/profile_image"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="20dp"
-                android:contentDescription="Аватар профиля"
-                app:icon="@drawable/profile_icon"
-                app:iconPadding="0dp"
-                app:iconSize="70dp"
-                app:iconGravity="textStart"
-                app:cornerRadius="45dp"
-                app:backgroundTint="@color/success"
-                android:backgroundTint="@color/success"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvProfile" />
+                android:textColor="@color/active_button"
+                android:visibility="gone" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/login_button"
-                android:layout_width="100dp"
-                android:layout_height="48dp"
-                android:text="Войти"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                app:backgroundTint="@color/inactive_button"
-                app:cornerRadius="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/profile_image"
-                app:layout_constraintBottom_toBottomOf="@id/profile_image"
-                android:layout_marginTop="50dp"/>
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/register_button"
-                android:layout_width="150dp"
-                android:layout_height="48dp"
-                android:text="Регистрация"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                app:backgroundTint="@color/inactive_button"
-                app:cornerRadius="10dp"
-                android:layout_marginRight="10dp"
-                app:layout_constraintEnd_toStartOf="@id/login_button"
-                app:layout_constraintTop_toTopOf="@id/profile_image"
-                app:layout_constraintBottom_toBottomOf="@id/profile_image"
-                android:layout_marginTop="50dp"
-                />
+        </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Кнопки входа/регистрации -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/auth_buttons_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:visibility="visible"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/white">
 
-    </com.google.android.material.card.MaterialCardView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="20dp">
 
-</RelativeLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/login_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Войти"
+                    android:textAllCaps="false"
+                    android:textSize="16sp"
+                    app:backgroundTint="@color/active_button"
+                    app:cornerRadius="16dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/register_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="12dp"
+                    android:text="Регистрация"
+                    android:textAllCaps="false"
+                    android:textSize="16sp"
+                    app:backgroundTint="@color/inactive_button"
+                    app:cornerRadius="16dp" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Сообщение, если нет рецептов -->
+        <TextView
+            android:id="@+id/emptyText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            android:text="У вас пока нет рецептов"
+            android:textSize="16sp"
+            android:textColor="@color/text_muted"
+            android:visibility="gone" />
+
+        <!-- Прогресс бар -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="32dp"
+            android:visibility="gone" />
+
+        <!-- Список рецептов пользователя -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/user_recipes_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</ScrollView>

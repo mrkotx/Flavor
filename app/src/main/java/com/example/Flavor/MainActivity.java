@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -33,9 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         home_button = findViewById(R.id.home_button);
-        search_button = findViewById(R.id.search_button);
         add_button = findViewById(R.id.add_button);
-        saved_button = findViewById(R.id.saved_button);
         profile_button = findViewById(R.id.profile_button);
 
         contentContainer = findViewById(R.id.contentContainer);
@@ -46,22 +45,10 @@ public class MainActivity extends AppCompatActivity {
                 showHomeFragment();
             }
         });
-        search_button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                showSearchFragment();
-            }
-        });
         add_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 showAddFragment();
-            }
-        });
-        saved_button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                showSavedFragment();
             }
         });
         profile_button.setOnClickListener(new View.OnClickListener(){
@@ -77,20 +64,12 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
     }
-
     private void showHomeFragment() {
         HomeFragment fragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.contentContainer, fragment)
                 .commit();
         updateButtonState(home_button);
-    }
-    private void showSearchFragment(){
-        SearchFragment fragment = new SearchFragment();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.contentContainer, fragment)
-                .commit();
-        updateButtonState(search_button);
     }
     private void showAddFragment(){
         AddFragment fragment = new AddFragment();
@@ -99,22 +78,26 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
         updateButtonState(add_button);
     }
-    private void showSavedFragment(){
-        SavedFragment fragment = new SavedFragment();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.contentContainer, fragment)
-                .commit();
-        updateButtonState(saved_button);
+    // Добавь этот метод в класс MainActivity
+    public void refreshFeed() {
+        // Получаем текущий фрагмент
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.contentContainer);
+
+        // Если текущий фрагмент - HomeFragment, обновляем его
+        if (currentFragment instanceof HomeFragment) {
+            ((HomeFragment) currentFragment).refreshFeed();
+        }
     }
-    private void showProfileFragment(){
+    public void showProfileFragment(){
         ProfileFragment fragment = new ProfileFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.contentContainer, fragment)
                 .commit();
         updateButtonState(profile_button);
     }
+
     private void updateButtonState(MaterialButton activeButton) {
-        MaterialButton[] buttons = {home_button, search_button, add_button, saved_button, profile_button};
+        MaterialButton[] buttons = {home_button, add_button, profile_button};
 
         for (MaterialButton button : buttons) {
             if (button == activeButton) {
