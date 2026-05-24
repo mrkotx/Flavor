@@ -58,6 +58,7 @@ public class ProfileFragment extends Fragment {
     private MaterialButton registerButton;
     private MaterialButton logoutButton;
     private View profileInfoContainer;
+    private View authButtonsContainer;
     private LinearLayout rootElement;
 
     private FirebaseAuth auth;
@@ -99,6 +100,7 @@ public class ProfileFragment extends Fragment {
         userRecipesRecyclerView = view.findViewById(R.id.user_recipes_recycler);
         progressBar = view.findViewById(R.id.progressBar);
         emptyText = view.findViewById(R.id.emptyText);
+        authButtonsContainer = view.findViewById(R.id.auth_buttons_container);
         myRecipesTitle = view.findViewById(R.id.my_recipes_title);
 
         loginButton = view.findViewById(R.id.login_button);
@@ -147,7 +149,6 @@ public class ProfileFragment extends Fragment {
             showProfileContent(false);
         }
     }
-
     private void showProfileContent(boolean isAuthorized) {
         if (isAuthorized) {
             profileInfoContainer.setVisibility(View.VISIBLE);
@@ -155,6 +156,8 @@ public class ProfileFragment extends Fragment {
             loginButton.setVisibility(View.GONE);
             registerButton.setVisibility(View.GONE);
             logoutButton.setVisibility(View.VISIBLE);
+            authButtonsContainer.setVisibility(View.GONE);
+
         } else {
             profileInfoContainer.setVisibility(View.GONE);
             userRecipesRecyclerView.setVisibility(View.GONE);
@@ -162,6 +165,7 @@ public class ProfileFragment extends Fragment {
             loginButton.setVisibility(View.VISIBLE);
             registerButton.setVisibility(View.VISIBLE);
             logoutButton.setVisibility(View.GONE);
+            authButtonsContainer.setVisibility(View.VISIBLE);
         }
     }
 

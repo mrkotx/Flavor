@@ -43,7 +43,9 @@
                         android:layout_height="90dp"
                         android:layout_gravity="center"
                         android:src="@drawable/profile_icon"
-                        android:scaleType="centerCrop" />
+                        android:scaleType="centerCrop"
+                        app:tint="@color/black"
+                        />
 
                     <TextView
                         android:id="@+id/user_name"
