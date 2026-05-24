@@ -32,13 +32,11 @@ public class FeedFragment extends Fragment {
     private TextView emptyText;
     private List<Recipe> recipeList = new ArrayList<>();
 
-    // Firebase
     private FirebaseAuth auth;
     private DatabaseReference recipesRef;
     private DatabaseReference savedRef;
     private FirebaseUser currentUser;
 
-    // Слушатель для обновления SavedFragment
     private OnRecipeUnsavedListener unsavedListener;
 
     public interface OnRecipeUnsavedListener {
@@ -61,13 +59,11 @@ public class FeedFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Инициализация Firebase
         auth = FirebaseAuth.getInstance();
         currentUser = auth.getCurrentUser();
         recipesRef = FirebaseDatabase.getInstance().getReference("Recipes");
         savedRef = FirebaseDatabase.getInstance().getReference("SavedRecipes");
 
-        // Настройка адаптера
         adapter = new RecipeAdapter(recipeList,
                 recipe -> openRecipeDetail(recipe),
                 (recipe, position, isLiked) -> {
@@ -76,7 +72,6 @@ public class FeedFragment extends Fragment {
                         adapter.updateLikeStatus(position, false);
                         return;
                     }
-
                     if (isLiked) {
                         saveToSavedRecipes(recipe, position);
                     } else {
@@ -86,7 +81,6 @@ public class FeedFragment extends Fragment {
         );
 
         recyclerView.setAdapter(adapter);
-
         loadRecipes();
 
         return view;
@@ -99,7 +93,6 @@ public class FeedFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 recipeList.clear();
-
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
                     if (map != null) {
@@ -108,8 +101,6 @@ public class FeedFragment extends Fragment {
                         recipeList.add(0, recipe);
                     }
                 }
-
-                // Проверяем статус сохранения для каждого рецепта
                 checkSavedStatus();
             }
 
@@ -129,9 +120,7 @@ public class FeedFragment extends Fragment {
             return;
         }
 
-        String userId = currentUser.getUid();
-
-        savedRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+        savedRef.child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (Recipe recipe : recipeList) {
@@ -152,11 +141,7 @@ public class FeedFragment extends Fragment {
     }
 
     private void saveToSavedRecipes(Recipe recipe, int position) {
-        String userId = currentUser.getUid();
-
-        savedRef.child(userId).child(recipe.getId()).setValue(true)
-                .addOnSuccessListener(aVoid -> {
-                })
+        savedRef.child(currentUser.getUid()).child(recipe.getId()).setValue(true)
                 .addOnFailureListener(e -> {
                     Toast.makeText(getContext(), "Ошибка", Toast.LENGTH_SHORT).show();
                     adapter.updateLikeStatus(position, false);
@@ -164,13 +149,8 @@ public class FeedFragment extends Fragment {
     }
 
     private void removeFromSavedRecipes(Recipe recipe, int position) {
-        String userId = currentUser.getUid();
-
-        savedRef.child(userId).child(recipe.getId()).removeValue()
+        savedRef.child(currentUser.getUid()).child(recipe.getId()).removeValue()
                 .addOnSuccessListener(aVoid -> {
-
-
-                    // Уведомляем SavedFragment об удалении
                     if (unsavedListener != null) {
                         unsavedListener.onRecipeUnsaved(recipe.getId());
                     }
@@ -182,22 +162,18 @@ public class FeedFragment extends Fragment {
     }
 
     private void openRecipeDetail(Recipe recipe) {
-        Toast.makeText(getContext(), "Открыть: " + recipe.getTitle(), Toast.LENGTH_SHORT).show();
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).openRecipeDetail(recipe);
+        }
     }
 
     private void showLoading(boolean isLoading) {
-        if (progressBar != null) {
-            progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
-        }
-        if (recyclerView != null) {
-            recyclerView.setVisibility(isLoading ? View.GONE : View.VISIBLE);
-        }
+        if (progressBar != null) progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        if (recyclerView != null) recyclerView.setVisibility(isLoading ? View.GONE : View.VISIBLE);
     }
 
     private void showEmpty(boolean isEmpty) {
-        if (emptyText != null) {
-            emptyText.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-        }
+        if (emptyText != null) emptyText.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
     }
 
     private void checkEmpty() {
