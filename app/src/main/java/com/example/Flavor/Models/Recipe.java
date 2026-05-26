@@ -11,20 +11,22 @@ public class Recipe implements Serializable {
  private String description;
  private String ingredients;
  private String instructions;
+ private String categoryId;
  private String userId;
  private String userEmail;
  private long timestamp;
- private boolean isSaved;  // ← НОВОЕ ПОЛЕ
+ private boolean isSaved;
 
  public Recipe() {
  }
 
  public Recipe(String title, String description, String ingredients,
-               String instructions, String userId, String userEmail) {
+               String instructions, String categoryId, String userId, String userEmail) {
   this.title = title;
   this.description = description;
   this.ingredients = ingredients;
   this.instructions = instructions;
+  this.categoryId = categoryId;
   this.userId = userId;
   this.userEmail = userEmail;
   this.timestamp = System.currentTimeMillis();
@@ -38,6 +40,7 @@ public class Recipe implements Serializable {
   this.description = (String) map.get("description");
   this.ingredients = (String) map.get("ingredients");
   this.instructions = (String) map.get("instructions");
+  this.categoryId = (String) map.get("categoryId");
   this.userId = (String) map.get("userId");
   this.userEmail = (String) map.get("userEmail");
   this.timestamp = (long) map.get("timestamp");
@@ -59,6 +62,9 @@ public class Recipe implements Serializable {
 
  public String getInstructions() { return instructions; }
  public void setInstructions(String instructions) { this.instructions = instructions; }
+
+ public String getCategoryId() { return categoryId; }
+ public void setCategoryId(String categoryId) { this.categoryId = categoryId; }
 
  public String getUserId() { return userId; }
  public void setUserId(String userId) { this.userId = userId; }

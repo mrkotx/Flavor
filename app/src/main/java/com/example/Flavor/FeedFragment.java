@@ -4,15 +4,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.Flavor.Models.Recipe;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +34,8 @@ public class FeedFragment extends Fragment {
     private ProgressBar progressBar;
     private TextView emptyText;
     private List<Recipe> recipeList = new ArrayList<>();
+    private String currentCategory = "Все";
+    private LinearLayout categoriesContainer;
 
     private FirebaseAuth auth;
     private DatabaseReference recipesRef;
@@ -56,6 +61,7 @@ public class FeedFragment extends Fragment {
         recyclerView = view.findViewById(R.id.feedRecyclerView);
         progressBar = view.findViewById(R.id.progressBar);
         emptyText = view.findViewById(R.id.emptyText);
+        categoriesContainer = view.findViewById(R.id.categoriesContainer);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -81,9 +87,79 @@ public class FeedFragment extends Fragment {
         );
 
         recyclerView.setAdapter(adapter);
+        setupCategories();
         loadRecipes();
 
         return view;
+    }
+
+    private void setupCategories() {
+        String[] categories = {"Все", "Завтрак", "Обед", "Ужин", "Перекус"};
+
+        for (String category : categories) {
+            addCategoryButton(category);
+        }
+    }
+
+    private void addCategoryButton(String categoryName) {
+        MaterialButton button = new MaterialButton(getContext());
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        params.setMarginEnd(16);
+        button.setLayoutParams(params);
+
+        button.setText(categoryName);
+        button.setTag(categoryName);
+        button.setCornerRadius(24);
+        button.setPadding(32, 12, 32, 12);
+        button.setAllCaps(false);
+
+        button.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.inactive_button));
+        button.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+
+        button.setOnClickListener(v -> {
+            for (int i = 0; i < categoriesContainer.getChildCount(); i++) {
+                View child = categoriesContainer.getChildAt(i);
+                if (child instanceof MaterialButton) {
+                    MaterialButton btn = (MaterialButton) child;
+                    btn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.inactive_button));
+                    btn.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+                }
+            }
+
+            button.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.active_button));
+            button.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+
+            currentCategory = categoryName;
+            filterRecipes();
+        });
+
+        categoriesContainer.addView(button);
+
+        if (categoryName.equals("Все")) {
+            button.performClick();
+        }
+    }
+
+    private void filterRecipes() {
+        if (currentCategory.equals("Все")) {
+            adapter.updateRecipes(recipeList);
+            checkEmpty();
+            return;
+        }
+
+        List<Recipe> filtered = new ArrayList<>();
+        for (Recipe recipe : recipeList) {
+            String recipeCategory = recipe.getCategoryId();
+            if (currentCategory.equals(recipeCategory)) {
+                filtered.add(recipe);
+            }
+        }
+        adapter.updateRecipes(filtered);
+        checkEmpty();
     }
 
     public void loadRecipes() {
@@ -126,16 +202,14 @@ public class FeedFragment extends Fragment {
                 for (Recipe recipe : recipeList) {
                     recipe.setSaved(snapshot.hasChild(recipe.getId()));
                 }
-                adapter.updateRecipes(recipeList);
+                filterRecipes();
                 showLoading(false);
-                checkEmpty();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                adapter.updateRecipes(recipeList);
+                filterRecipes();
                 showLoading(false);
-                checkEmpty();
             }
         });
     }
@@ -177,6 +251,6 @@ public class FeedFragment extends Fragment {
     }
 
     private void checkEmpty() {
-        showEmpty(recipeList.isEmpty());
+        showEmpty(adapter.getItemCount() == 0);
     }
 }

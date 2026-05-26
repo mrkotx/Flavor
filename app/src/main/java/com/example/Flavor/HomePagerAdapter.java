@@ -34,8 +34,6 @@ public class HomePagerAdapter extends FragmentStateAdapter {
         fragmentMap.put(position, fragment);
         return fragment;
     }
-
-    // Добавь этот метод для доступа к фрагментам
     public Fragment getFragment(int position) {
         return fragmentMap.get(position);
     }

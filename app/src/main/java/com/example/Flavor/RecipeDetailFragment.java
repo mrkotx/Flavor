@@ -67,10 +67,16 @@ public class RecipeDetailFragment extends Fragment {
         TextView detailInstructions = view.findViewById(R.id.detailInstructions);
         TextView authorName = view.findViewById(R.id.authorName);
         TextView detailDate = view.findViewById(R.id.detailDate);
+        TextView detailCategory = view.findViewById(R.id.detailCategory);
+
         likeButton = view.findViewById(R.id.likeButtonDetail);
         ImageButton backButton = view.findViewById(R.id.backButton);
 
         if (recipe != null) {
+            detailCategory.setText(recipe.getCategoryId());
+            detailCategory.setVisibility(View.VISIBLE);
+            android.util.Log.d("RecipeDetail", "Recipe ID: " + recipe.getId());
+            android.util.Log.d("RecipeDetail", "Category from getCategoryId(): " + recipe.getCategoryId());
             detailTitle.setText(recipe.getTitle());
             detailDescription.setText(recipe.getDescription());
 

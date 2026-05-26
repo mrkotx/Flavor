@@ -160,18 +160,25 @@
                 app:cornerRadius="16dp" />
 
             <!-- Заголовок "Мои рецепты" — показывается только вместе с RecyclerView через код -->
-            <TextView
-                android:id="@+id/my_recipes_title"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
                 android:layout_marginBottom="4dp"
-                android:paddingStart="4dp"
-                android:text="Мои рецепты"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/active_button"
-                android:visibility="gone" />
+                android:paddingStart="8dp">
+                <TextView
+                    android:id="@+id/my_recipes_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:paddingStart="4dp"
+                    android:text="Мои рецепты"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/active_button"
+                    android:visibility="gone" />
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 
@@ -234,9 +241,8 @@
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="10dp"
             android:layout_gravity="center"
-            android:layout_marginTop="32dp"
             android:visibility="gone" />
 
         <!-- Список рецептов пользователя -->

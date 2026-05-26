@@ -4,11 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import com.example.Flavor.Models.Recipe;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -23,11 +24,14 @@ public class AddFragment extends Fragment {
 
     private TextInputEditText titleInput, descriptionInput, ingredientsInput, instructionsInput;
     private MaterialButton saveButton, cancelButton;
+    private AutoCompleteTextView categorySpinner;
 
-    // Firebase
+    private String selectedCategory = "Все";
+
+    private final String[] categories = {"Все", "Завтрак", "Обед", "Ужин", "Перекус"};
+
     private FirebaseAuth auth;
     private DatabaseReference recipesRef;
-    private DatabaseReference userRecipesRef;
     private FirebaseUser currentUser;
 
     @Nullable
@@ -36,25 +40,39 @@ public class AddFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add, container, false);
 
-        // Инициализация UI
         titleInput = view.findViewById(R.id.titleInput);
         descriptionInput = view.findViewById(R.id.descriptionInput);
         ingredientsInput = view.findViewById(R.id.ingredientsInput);
         instructionsInput = view.findViewById(R.id.instructionsInput);
         saveButton = view.findViewById(R.id.saveButton);
         cancelButton = view.findViewById(R.id.cancelButton);
+        categorySpinner = view.findViewById(R.id.categorySpinner);
 
-        // Инициализация Firebase
+        setupCategorySpinner();
+
         auth = FirebaseAuth.getInstance();
         currentUser = auth.getCurrentUser();
         recipesRef = FirebaseDatabase.getInstance().getReference("Recipes");
-        userRecipesRef = FirebaseDatabase.getInstance().getReference("UserRecipes");
 
-        // Обработчики
         saveButton.setOnClickListener(v -> checkAuthAndSave());
         cancelButton.setOnClickListener(v -> goBack());
 
         return view;
+    }
+
+    private void setupCategorySpinner() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                getContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                categories
+        );
+
+        categorySpinner.setAdapter(adapter);
+        categorySpinner.setText(categories[0], false);
+
+        categorySpinner.setOnItemClickListener((parent, view, position, id) -> {
+            selectedCategory = categories[position];
+        });
     }
 
     private void checkAuthAndSave() {
@@ -82,13 +100,11 @@ public class AddFragment extends Fragment {
     }
 
     private void saveRecipeToFirebase() {
-        // Получаем данные
         String title = titleInput.getText().toString().trim();
         String description = descriptionInput.getText().toString().trim();
         String ingredients = ingredientsInput.getText().toString().trim();
         String instructions = instructionsInput.getText().toString().trim();
 
-        // Валидация
         if (title.isEmpty()) {
             titleInput.setError("Введите название рецепта");
             titleInput.requestFocus();
@@ -113,7 +129,6 @@ public class AddFragment extends Fragment {
             return;
         }
 
-        // Сохраняем
         saveButton.setEnabled(false);
         saveButton.setText("Сохранение...");
 
@@ -122,55 +137,35 @@ public class AddFragment extends Fragment {
         String userEmail = currentUser.getEmail();
         long timestamp = System.currentTimeMillis();
 
-        // Создаём Map с данными рецепта
         Map<String, Object> recipe = new HashMap<>();
         recipe.put("id", recipeId);
         recipe.put("title", title);
         recipe.put("description", description);
         recipe.put("ingredients", ingredients);
         recipe.put("instructions", instructions);
+        recipe.put("categoryId", selectedCategory);
         recipe.put("userId", userId);
         recipe.put("userEmail", userEmail);
         recipe.put("timestamp", timestamp);
 
         if (recipeId != null) {
-            // Сохраняем в общую коллекцию Recipes
             recipesRef.child(recipeId).setValue(recipe)
                     .addOnSuccessListener(aVoid -> {
-                        // Сохраняем связку пользователь-рецепт
-                        saveUserRecipeReference(userId, recipeId);
+                        saveButton.setEnabled(true);
+                        saveButton.setText("Опубликовать");
+                        Toast.makeText(getContext(), "Рецепт добавлен!", Toast.LENGTH_SHORT).show();
+                        clearForm();
+
+                        if (getActivity() instanceof MainActivity) {
+                            ((MainActivity) getActivity()).refreshFeed();
+                        }
                     })
                     .addOnFailureListener(e -> {
                         saveButton.setEnabled(true);
-                        saveButton.setText("Сохранить");
+                        saveButton.setText("Опубликовать");
                         Snackbar.make(getView(), "Ошибка: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
                     });
         }
-    }
-
-    private void saveUserRecipeReference(String userId, String recipeId) {
-        // Сохраняем ссылку на рецепт для пользователя
-        Map<String, Object> userRecipe = new HashMap<>();
-        userRecipe.put("recipeId", recipeId);
-        userRecipe.put("savedAt", System.currentTimeMillis());
-
-        userRecipesRef.child(userId).child(recipeId).setValue(userRecipe)
-                .addOnSuccessListener(aVoid -> {
-                    saveButton.setEnabled(true);
-                    saveButton.setText("Сохранить");
-                    Toast.makeText(getContext(), "Рецепт добавлен!", Toast.LENGTH_SHORT).show();
-                    clearForm();
-
-                    // Обновляем ленту
-                    if (getActivity() instanceof MainActivity) {
-                        ((MainActivity) getActivity()).refreshFeed();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    saveButton.setEnabled(true);
-                    saveButton.setText("Сохранить");
-                    Snackbar.make(getView(), "Ошибка при сохранении ссылки", Snackbar.LENGTH_SHORT).show();
-                });
     }
 
     private void clearForm() {
@@ -178,6 +173,8 @@ public class AddFragment extends Fragment {
         descriptionInput.setText("");
         ingredientsInput.setText("");
         instructionsInput.setText("");
+        categorySpinner.setText(categories[0], false);
+        selectedCategory = categories[0];
         titleInput.requestFocus();
     }
 

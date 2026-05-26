@@ -9,6 +9,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -60,6 +62,10 @@ public class ProfileFragment extends Fragment {
     private View profileInfoContainer;
     private LinearLayout rootElement;
 
+    private AutoCompleteTextView editCategory;
+    private String[] categories = {"Все", "Завтрак", "Обед", "Ужин", "Перекус"};
+    private String selectedCategory;
+
     private FirebaseAuth auth;
     private DatabaseReference usersRef;
     private DatabaseReference recipesRef;
@@ -84,6 +90,7 @@ public class ProfileFragment extends Fragment {
                         uploadProfilePhoto(imageUri);
                     }
                 });
+
     }
 
     @Override
@@ -272,6 +279,7 @@ public class ProfileFragment extends Fragment {
         TextInputEditText editDescription = dialogView.findViewById(R.id.editDescription);
         TextInputEditText editIngredients = dialogView.findViewById(R.id.editIngredients);
         TextInputEditText editInstructions = dialogView.findViewById(R.id.editInstructions);
+        AutoCompleteTextView editCategory = dialogView.findViewById(R.id.editCategory);
         MaterialButton saveEditButton = dialogView.findViewById(R.id.saveEditButton);
         MaterialButton deleteButton = dialogView.findViewById(R.id.deleteButton);
 
@@ -279,6 +287,26 @@ public class ProfileFragment extends Fragment {
         editDescription.setText(recipe.getDescription());
         editIngredients.setText(recipe.getIngredients());
         editInstructions.setText(recipe.getInstructions());
+
+        // Настройка выбора категории
+        String[] categories = {"Все", "Завтрак", "Обед", "Ужин", "Перекус"};
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(
+                getContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                categories
+        );
+        editCategory.setAdapter(categoryAdapter);
+
+        String currentCategory = recipe.getCategoryId();
+        if (currentCategory == null || currentCategory.isEmpty()) {
+            currentCategory = "Все";
+        }
+        editCategory.setText(currentCategory, false);
+
+        final String[] selectedCategory = {currentCategory};
+        editCategory.setOnItemClickListener((parent, view, position, id) -> {
+            selectedCategory[0] = categories[position];
+        });
 
         AlertDialog dialog = builder.create();
         if (dialog.getWindow() != null) {
@@ -302,6 +330,7 @@ public class ProfileFragment extends Fragment {
             updates.put("description", description);
             updates.put("ingredients", ingredients);
             updates.put("instructions", instructions);
+            updates.put("categoryId", selectedCategory[0]);
 
             recipesRef.child(recipe.getId()).updateChildren(updates)
                     .addOnSuccessListener(aVoid -> {
