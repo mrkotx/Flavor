@@ -55,7 +55,7 @@ public class AddFragment extends Fragment {
         recipesRef = FirebaseDatabase.getInstance().getReference("Recipes");
 
         saveButton.setOnClickListener(v -> checkAuthAndSave());
-        cancelButton.setOnClickListener(v -> goBack());
+        cancelButton.setOnClickListener(v -> clearForm());
 
         return view;
     }
@@ -97,6 +97,9 @@ public class AddFragment extends Fragment {
         });
         dialog.setNegativeButton("Отмена", null);
         dialog.show();
+    }
+    private void cancel(){
+
     }
 
     private void saveRecipeToFirebase() {
@@ -178,9 +181,4 @@ public class AddFragment extends Fragment {
         titleInput.requestFocus();
     }
 
-    private void goBack() {
-        if (getActivity() != null) {
-            getActivity().onBackPressed();
-        }
-    }
 }

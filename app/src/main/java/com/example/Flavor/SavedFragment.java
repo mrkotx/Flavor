@@ -165,7 +165,9 @@ public class SavedFragment extends Fragment {
     }
 
     private void openRecipeDetail(Recipe recipe) {
-        Toast.makeText(getContext(), "Открыть: " + recipe.getTitle(), Toast.LENGTH_SHORT).show();
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).openRecipeDetail(recipe);
+        }
     }
 
     private void showLoading(boolean isLoading) {
