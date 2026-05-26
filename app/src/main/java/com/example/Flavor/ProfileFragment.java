@@ -60,6 +60,7 @@ public class ProfileFragment extends Fragment {
     private MaterialButton registerButton;
     private MaterialButton logoutButton;
     private View profileInfoContainer;
+    private View authButtonsContainer;
     private LinearLayout rootElement;
 
     private AutoCompleteTextView editCategory;
@@ -113,12 +114,14 @@ public class ProfileFragment extends Fragment {
         logoutButton = view.findViewById(R.id.logout_button);
         profileInfoContainer = view.findViewById(R.id.profile_info_container);
         rootElement = view.findViewById(R.id.root_element);
+        authButtonsContainer = view.findViewById(R.id.auth_buttons_container);
 
         auth = FirebaseAuth.getInstance();
         usersRef = FirebaseDatabase.getInstance().getReference("Users");
         recipesRef = FirebaseDatabase.getInstance().getReference("Recipes");
         savedRef = FirebaseDatabase.getInstance().getReference("SavedRecipes");
         storageRef = FirebaseStorage.getInstance().getReference("profile_photos");
+
 
         userRecipesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         userRecipesAdapter = new RecipeAdapter(userRecipesList,
@@ -157,12 +160,14 @@ public class ProfileFragment extends Fragment {
 
     private void showProfileContent(boolean isAuthorized) {
         if (isAuthorized) {
+            authButtonsContainer.setVisibility(View.GONE);
             profileInfoContainer.setVisibility(View.VISIBLE);
             userRecipesRecyclerView.setVisibility(View.VISIBLE);
             loginButton.setVisibility(View.GONE);
             registerButton.setVisibility(View.GONE);
             logoutButton.setVisibility(View.VISIBLE);
         } else {
+            authButtonsContainer.setVisibility(View.VISIBLE);
             profileInfoContainer.setVisibility(View.GONE);
             userRecipesRecyclerView.setVisibility(View.GONE);
             myRecipesTitle.setVisibility(View.GONE);
@@ -423,10 +428,16 @@ public class ProfileFragment extends Fragment {
         TextInputEditText confirm_password = fragment_register.findViewById(R.id.confirm_password);
         MaterialButton register_confirm = fragment_register.findViewById(R.id.register_confirm);
         MaterialButton dismiss_reg = fragment_register.findViewById(R.id.dismiss_reg);
+        TextView changeToLogin = fragment_register.findViewById(R.id.yes_account);
 
         AlertDialog alertDialog = dialog.create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         alertDialog.show();
+
+        changeToLogin.setOnClickListener(v ->{
+            alertDialog.dismiss();
+            showLoginWindow();
+        });
 
         register_confirm.setOnClickListener(v -> {
             if (TextUtils.isEmpty(nickname.getText().toString())) {
@@ -460,7 +471,6 @@ public class ProfileFragment extends Fragment {
 
         dismiss_reg.setOnClickListener(v -> alertDialog.dismiss());
     }
-
     private void showLoginWindow() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -471,10 +481,16 @@ public class ProfileFragment extends Fragment {
         TextInputEditText password = fragment_signin.findViewById(R.id.password);
         MaterialButton login_confirm = fragment_signin.findViewById(R.id.login_confirm);
         MaterialButton dismiss_sign = fragment_signin.findViewById(R.id.dismiss_sign);
+        TextView changeToRegister = fragment_signin.findViewById(R.id.no_account);
 
         AlertDialog alertDialog = dialog.create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         alertDialog.show();
+
+        changeToRegister.setOnClickListener(v -> {
+            alertDialog.dismiss();
+            showRegisterWindow();
+        });
 
         login_confirm.setOnClickListener(v -> {
             if (TextUtils.isEmpty(email.getText().toString())) {

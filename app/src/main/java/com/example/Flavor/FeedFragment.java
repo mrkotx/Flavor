@@ -118,7 +118,7 @@ public class FeedFragment extends Fragment {
         button.setAllCaps(false);
 
         button.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.inactive_button));
-        button.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+        button.setTextColor(ContextCompat.getColor(getContext(), R.color.text_category));
 
         button.setOnClickListener(v -> {
             for (int i = 0; i < categoriesContainer.getChildCount(); i++) {
@@ -126,7 +126,7 @@ public class FeedFragment extends Fragment {
                 if (child instanceof MaterialButton) {
                     MaterialButton btn = (MaterialButton) child;
                     btn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.inactive_button));
-                    btn.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+                    btn.setTextColor(ContextCompat.getColor(getContext(), R.color.text_category));
                 }
             }
 
