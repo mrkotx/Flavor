@@ -226,7 +226,6 @@ public class ProfileFragment extends Fragment {
                         userRecipesAdapter.updateRecipes(userRecipesList);
                         showLoading(false);
 
-                        // Fix: always show title when user is logged in
                         if (userRecipesList.isEmpty()) {
                             myRecipesTitle.setVisibility(View.VISIBLE);
                             emptyText.setText("У вас пока нет рецептов\nДобавьте первый рецепт!");
@@ -403,6 +402,7 @@ public class ProfileFragment extends Fragment {
         currentUser = null;
         showProfileContent(false);
         userRecipesList.clear();
+        emptyText.setText("");
         userRecipesAdapter.updateRecipes(userRecipesList);
         Toast.makeText(getContext(), "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show();
     }
@@ -446,8 +446,8 @@ public class ProfileFragment extends Fragment {
             if (TextUtils.isEmpty(email.getText().toString())) {
                 Snackbar.make(rootElement, "Введите почту", Snackbar.LENGTH_SHORT).show(); return;
             }
-            if (password.getText().toString().length() < 5) {
-                Snackbar.make(rootElement, "Пароль не менее 5 символов", Snackbar.LENGTH_SHORT).show(); return;
+            if (password.getText().toString().length() < 6) {
+                Snackbar.make(rootElement, "Пароль не менее 6 символов", Snackbar.LENGTH_SHORT).show(); return;
             }
             if (!confirm_password.getText().toString().equals(password.getText().toString())) {
                 Snackbar.make(rootElement, "Пароли не совпадают", Snackbar.LENGTH_SHORT).show(); return;

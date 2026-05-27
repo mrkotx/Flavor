@@ -11,6 +11,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/text_secondary"
+            android:text="0.0.1">
+        </TextView>
 
         <!-- Аватар и информация - когда пользователь авторизован -->
         <LinearLayout
@@ -25,7 +32,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="5dp"
                 android:backgroundTint="@color/surface"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="4dp"
@@ -190,7 +197,7 @@
             android:id="@+id/auth_buttons_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:backgroundTint="@color/surface"
             android:visibility="visible"
             app:cardCornerRadius="20dp"

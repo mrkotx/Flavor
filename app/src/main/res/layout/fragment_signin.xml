@@ -6,120 +6,127 @@
     android:layout_height="match_parent"
     android:background="@color/transparent">
 
-    <LinearLayout
+    <!-- ScrollView для скролла -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_view"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/surface"
-            app:cardCornerRadius="32dp"
-            app:cardElevation="10dp"
-            app:strokeWidth="0dp">
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="16dp">
 
-            <LinearLayout
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="24dp">
+                app:cardBackgroundColor="@color/surface"
+                app:cardCornerRadius="32dp"
+                app:cardElevation="10dp"
+                app:strokeWidth="0dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="32dp"
-                    android:gravity="center"
-                    android:text="Войти в аккаунт"
-                    android:textColor="@color/text_primary"
-                    android:textSize="32sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical"
+                    android:padding="24dp">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:boxStrokeColor="@color/inactive_button"
-                    app:boxStrokeWidth="2dp"
-                    app:hintTextColor="@color/text_muted">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/email"
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Email"
-                        android:inputType="textEmailAddress"
+                        android:layout_marginBottom="32dp"
+                        android:gravity="center"
+                        android:text="Войти в аккаунт"
                         android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_muted" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:textSize="32sp"
+                        android:textStyle="bold" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="32dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:boxStrokeColor="@color/inactive_button"
-                    app:boxStrokeWidth="2dp"
-                    app:hintTextColor="@color/text_muted"
-                    app:passwordToggleEnabled="true"
-                    app:passwordToggleTint="@color/inactive_button">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/password"
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Password"
-                        android:inputType="textPassword"
-                        android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_muted" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginBottom="20dp"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:boxStrokeColor="@color/inactive_button"
+                        app:boxStrokeWidth="2dp"
+                        app:hintTextColor="@color/text_muted">
 
-                <TextView
-                    android:id="@+id/no_account"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:text="У меня нет аккаунта."
-                    android:textColor="@color/warning"
-                    android:textStyle="bold" />
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Email"
+                            android:inputType="textEmailAddress"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_muted" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/login_confirm"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:text="Войти"
-                    android:textAllCaps="false"
-                    android:textColor="@color/text_on_primary"
-                    android:textSize="16sp"
-                    app:backgroundTint="@color/inactive_button"
-                    app:cornerRadius="16dp" />
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="32dp"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:boxStrokeColor="@color/inactive_button"
+                        app:boxStrokeWidth="2dp"
+                        app:hintTextColor="@color/text_muted"
+                        app:passwordToggleEnabled="true"
+                        app:passwordToggleTint="@color/inactive_button">
 
-            </LinearLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/password"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Password"
+                            android:inputType="textPassword"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_muted" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+                    <TextView
+                        android:id="@+id/no_account"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:text="У меня нет аккаунта."
+                        android:textColor="@color/warning"
+                        android:textStyle="bold" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/dismiss_sign"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:minWidth="100dp"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="12dp"
-            android:text="Отмена"
-            android:textAllCaps="false"
-            android:textColor="@color/text_on_primary"
-            android:textSize="16sp"
-            app:backgroundTint="@color/inactive_button"
-            app:cornerRadius="16dp" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/login_confirm"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:text="Войти"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_on_primary"
+                        android:textSize="16sp"
+                        app:backgroundTint="@color/inactive_button"
+                        app:cornerRadius="16dp" />
 
-    </LinearLayout>
+                </LinearLayout>
 
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/dismiss_sign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:minWidth="100dp"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="12dp"
+                android:text="Отмена"
+                android:textAllCaps="false"
+                android:textColor="@color/text_on_primary"
+                android:textSize="16sp"
+                app:backgroundTint="@color/inactive_button"
+                app:cornerRadius="16dp" />
+
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>
